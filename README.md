@@ -30,7 +30,7 @@ This is a simple proof-of-concept Ruby server that tries some new stuff.
 
   and it would look for an ERB view in `views/nested/other/some/this_method.html.erb.
 
-2.
+2. Controller methods serving a view are expected to return a hash of variables they plan to use in the view. Returning `{ foo: 'bar' }` allows `<%= foo %>` in the view to print 'bar'.
 
 ## Services
 
@@ -43,3 +43,11 @@ This is a simple proof-of-concept Ruby server that tries some new stuff.
 # Running tests
 
 - TBD
+
+# Potential labs and things to play with
+
+- Inline tests
+- Pseudocode mode
+- Autobower
+- Exception injection
+- Stats logging

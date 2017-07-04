@@ -2,14 +2,20 @@ require 'rack'
 require 'pry'
 require 'erb'
 
+require_relative 'gavgav-engine/controller'
+
 # require_relative stuff
 
 class Router
+  DEVELOPMENT_MODE = true
+
   def self.route(path)
     # /my/test/cool/foo should instantiate CoolController in controllers/my/test/cool_controller.rb, which has method foo on it
     _, *controller_path, receiving_method = path.split('/')
 
     controller = instantiate_receiving_controller(controller_path)
+    return render_404 unless controller
+
     controller_response = controller.new.send(receiving_method)
     controller_response_binding = create_erb_binding_from(controller_response)
 
@@ -21,9 +27,21 @@ class Router
 
   private
 
+  def self.render_404
+    '404'
+  end
+
   def self.instantiate_receiving_controller controller_path
     require_relative "controllers/#{controller_path.join('/')}_controller.rb"
     Object.const_get("#{controller_path.last.capitalize}Controller")
+
+  rescue LoadError => e
+    raise e if DEVELOPMENT_MODE
+    nil # *_controller.rb not found
+
+  rescue NameError => e
+    raise e if DEVELOPMENT_MODE
+    nil # *Controller undefined
   end
 
   def self.create_erb_binding_from(hash_obj)

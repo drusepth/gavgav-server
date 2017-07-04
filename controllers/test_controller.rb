@@ -1,4 +1,4 @@
-class TestController
+class TestController < Controller
   def some_public_method
     {
       some_named_variable: 'the value!',
