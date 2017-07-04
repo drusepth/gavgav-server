@@ -10,7 +10,8 @@ class Router
     _, *controller_path, receiving_method = path.split('/')
 
     controller = instantiate_receiving_controller(controller_path)
-    controller_response_binding = controller.new.send(receiving_method)
+    controller_response = controller.new.send(receiving_method)
+    controller_response_binding = create_erb_binding_from(controller_response)
 
     view_template_source = File.read("views/#{controller_path.join('/')}/#{receiving_method}.html.erb")
     erb_renderer = ERB.new(view_template_source)
@@ -23,6 +24,14 @@ class Router
   def self.instantiate_receiving_controller controller_path
     require_relative "controllers/#{controller_path.join('/')}_controller.rb"
     Object.const_get("#{controller_path.last.capitalize}Controller")
+  end
+
+  def self.create_erb_binding_from(hash_obj)
+    our_binding = binding
+    hash_obj.each do |key, value|
+      our_binding.local_variable_set(key.to_sym, value)
+    end
+    our_binding
   end
 end
 

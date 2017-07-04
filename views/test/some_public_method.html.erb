@@ -1,1 +1,9 @@
-Oh hello there!
+<h1>Oh hello there!</h1>
+
+Controller variables in scope:
+<ul>
+  <li>some_named_variable: <%= some_named_variable %></li>
+  <li>some_computation: <%= some_computation %></li>
+  <li>some_function_call: <%= some_function_call %></li>
+  <li>variable_not_in_scope: <%= defined?(variable_not_in_scope) ? 'THIS SHOULD NEVER PRINT' : 'variable not in scope' %>
+</ul>
